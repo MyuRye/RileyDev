@@ -2,899 +2,1274 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#08070d">
-<title>Riley — Gameplay Programmer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riley — Game Developer</title>
 
 <style>
 :root{
-  --bg:#07060b;
-  --bg2:#0d0a14;
-  --panel:rgba(18,14,28,.72);
-  --panel2:rgba(25,18,38,.78);
-  --text:#f5f1ff;
-  --muted:#aaa0bb;
-  --purple:#9b5cff;
-  --purple2:#6d2cff;
-  --pink:#ff4fcf;
-  --line:rgba(170,110,255,.18);
-  --glow:rgba(143,75,255,.35);
-  --max:1180px;
+  color-scheme:dark light;
+  --bg:#08070d;
+  --surface:#100e18;
+  --surface2:#161221;
+  --text:#f7f3ff;
+  --muted:#aaa2bb;
+  --line:#2b2338;
+  --purple:#a970ff;
+  --violet:#6d35c9;
+  --pink:#d58cff;
+  --shadow:0 24px 80px rgba(0,0,0,.42)
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+@media (prefers-color-scheme:light){
+:root{
+  --bg:#f7f4fb;
+  --surface:#fff;
+  --surface2:#f0ebf7;
+  --text:#17121f;
+  --muted:#665c70;
+  --line:#ddd3e6;
+  --purple:#7136bd;
+  --violet:#54218e;
+  --pink:#a54ddd;
+  --shadow:0 24px 70px rgba(45,25,65,.14)
+}}
 
-html{
-  scroll-behavior:smooth;
-}
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
 
 body{
-  background:
-    radial-gradient(circle at 15% 10%,rgba(126,62,255,.12),transparent 28%),
-    radial-gradient(circle at 85% 25%,rgba(255,55,205,.08),transparent 25%),
-    linear-gradient(180deg,#07060b 0%,#0a0710 50%,#06050a 100%);
+  margin:0;
+  background:var(--bg);
   color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  line-height:1.6;
-  overflow-x:hidden;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
 
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.28;
-  background-image:
-    linear-gradient(rgba(160,100,255,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(160,100,255,.035) 1px,transparent 1px);
-  background-size:48px 48px;
-  mask-image:linear-gradient(to bottom,black,transparent 90%);
-  z-index:-2;
-}
+button,a{font:inherit}
+a{color:inherit;text-decoration:none}
 
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-button,
-a{
-  -webkit-tap-highlight-color:transparent;
-}
-
-::selection{
-  background:rgba(155,92,255,.35);
-  color:white;
-}
-
-/* Scroll progress */
-
-#progress{
-  position:fixed;
-  top:0;
-  left:0;
-  width:0%;
-  height:3px;
-  background:linear-gradient(90deg,var(--purple2),var(--pink));
-  box-shadow:0 0 16px var(--purple);
-  z-index:9999;
-}
-
-/* Header */
-
-header{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:76px;
-  z-index:1000;
-  backdrop-filter:blur(18px);
-  background:rgba(7,6,11,.7);
-  border-bottom:1px solid rgba(180,120,255,.1);
-}
-
-.nav{
-  max-width:var(--max);
-  height:100%;
-  margin:auto;
-  padding:0 24px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  font-weight:900;
-  letter-spacing:.16em;
-  font-size:.9rem;
-}
-
-.logo-mark{
-  width:29px;
-  height:29px;
-  border:1px solid rgba(183,124,255,.55);
-  background:
-    linear-gradient(135deg,rgba(157,82,255,.35),rgba(255,66,207,.12));
-  display:grid;
-  place-items:center;
-  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-  box-shadow:0 0 22px rgba(138,74,255,.25);
-}
-
-.logo-mark span{
-  font-size:.7rem;
-}
-
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:30px;
-}
-
-.nav-links a{
-  color:#aaa1b8;
-  font-size:.82rem;
-  font-weight:700;
-  letter-spacing:.06em;
-  transition:.25s;
-}
-
-.nav-links a:hover{
-  color:white;
-  text-shadow:0 0 16px rgba(174,111,255,.7);
-}
-
-.menu{
-  display:none;
-  border:1px solid var(--line);
-  background:rgba(30,20,45,.7);
-  color:white;
-  padding:8px 11px;
-  border-radius:8px;
-}
-
-/* General */
-
-main{
-  width:100%;
+.app{
+  min-height:100vh;
+  background-color:var(--bg);
+  overflow:hidden
 }
 
 .container{
-  width:min(var(--max),calc(100% - 40px));
-  margin:auto;
+  width:min(1120px,calc(100% - 40px));
+  margin:auto
 }
 
-section{
-  padding:115px 0;
+.nav{
+  height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line)
+}
+
+.brand{
+  font-weight:900;
+  letter-spacing:.16em;
+  font-size:14px
+}
+
+.brand span{color:var(--purple)}
+
+.navlinks{
+  display:flex;
+  gap:25px;
+  color:var(--muted);
+  font-size:13px
+}
+
+.navlinks a:hover{color:var(--text)}
+
+.menu{
+  display:none;
+  background:none;
+  border:1px solid var(--line);
+  color:var(--text);
+  padding:8px 10px;
+  border-radius:10px
+}
+
+.hero{
   position:relative;
+  padding:110px 0 120px
 }
 
-.section-head{
-  margin-bottom:42px;
+.hero:before{
+  content:"";
+  position:absolute;
+  inset:-20% -10% auto 35%;
+  height:700px;
+  background:radial-gradient(circle,rgba(128,61,220,.27),transparent 63%);
+  pointer-events:none
 }
 
 .eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:9px;
-  color:#b997ff;
-  font-size:.72rem;
-  font-weight:900;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  margin-bottom:13px;
-}
-
-.eyebrow:before{
-  content:"";
-  width:23px;
-  height:1px;
-  background:linear-gradient(90deg,var(--purple),var(--pink));
-  box-shadow:0 0 10px var(--purple);
-}
-
-h1,h2,h3{
-  line-height:1.08;
-}
-
-h2{
-  font-size:clamp(2rem,4vw,3.5rem);
-  letter-spacing:-.045em;
-}
-
-.section-copy{
-  max-width:680px;
-  margin-top:16px;
-  color:var(--muted);
-}
-
-/* Hero */
-
-.hero{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  padding-top:150px;
-  overflow:hidden;
-}
-
-.hero-orb{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(70px);
-  pointer-events:none;
-}
-
-.orb1{
-  width:420px;
-  height:420px;
-  background:rgba(111,44,255,.13);
-  top:8%;
-  right:-120px;
-}
-
-.orb2{
-  width:340px;
-  height:340px;
-  background:rgba(255,50,202,.08);
-  bottom:5%;
-  left:-130px;
-}
-
-.hero-grid{
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:55px;
-  align-items:center;
+  color:var(--purple);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.2em;
+  text-transform:uppercase
 }
 
 .hero h1{
-  max-width:900px;
-  font-size:clamp(3.1rem,7vw,7rem);
-  letter-spacing:-.07em;
+  font-size:clamp(62px,12vw,145px);
+  line-height:.84;
+  margin:18px 0 28px;
+  letter-spacing:-.075em;
+  max-width:900px
 }
 
-.gradient-text{
-  background:linear-gradient(100deg,#fff 5%,#bd8cff 42%,#ff58d2 85%);
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(120deg,var(--text),var(--purple),var(--pink));
   -webkit-background-clip:text;
   background-clip:text;
-  color:transparent;
+  color:transparent
 }
 
-.hero-sub{
-  margin-top:24px;
-  max-width:680px;
-  color:#b7adbf;
-  font-size:1.08rem;
+.tagline{
+  font-size:clamp(19px,2.5vw,27px);
+  color:var(--muted);
+  max-width:600px
 }
 
-.hero-actions{
+.actions{
   display:flex;
   gap:12px;
-  flex-wrap:wrap;
-  margin-top:32px;
+  margin-top:36px;
+  flex-wrap:wrap
 }
 
 .btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:46px;
-  padding:0 18px;
-  border-radius:10px;
+  padding:13px 18px;
+  border-radius:12px;
   border:1px solid var(--line);
-  background:rgba(25,17,38,.75);
-  font-weight:800;
-  font-size:.86rem;
-  transition:.25s;
+  background:var(--surface);
+  font-weight:750;
+  font-size:13px;
+  transition:.2s;
+  cursor:pointer
+}
+
+.btn.primary{
+  background:linear-gradient(135deg,var(--violet),var(--purple));
+  border-color:transparent;
+  color:white;
+  box-shadow:0 12px 35px rgba(121,57,204,.28)
 }
 
 .btn:hover{
   transform:translateY(-2px);
-  border-color:rgba(177,112,255,.5);
-  box-shadow:0 10px 35px rgba(103,40,180,.2);
+  border-color:var(--purple)
 }
 
-.btn.primary{
-  background:linear-gradient(135deg,#7837e8,#b54dce);
-  border-color:transparent;
-  box-shadow:0 0 30px rgba(139,63,255,.23);
-}
+section{padding:92px 0}
 
-/* HUD */
-
-.hud{
-  border:1px solid rgba(168,103,255,.2);
-  background:
-    linear-gradient(145deg,rgba(28,20,40,.82),rgba(11,9,16,.72));
-  border-radius:18px;
-  padding:24px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.03),
-    0 25px 80px rgba(0,0,0,.35);
-  position:relative;
-  overflow:hidden;
-}
-
-.hud:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg,transparent,rgba(166,102,255,.06),transparent);
-  transform:translateX(-100%);
-  animation:scan 5s linear infinite;
-}
-
-@keyframes scan{
-  to{transform:translateX(100%);}
-}
-
-.hud-top{
+.section-head{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
-  color:#887c98;
-  font-size:.68rem;
-  letter-spacing:.13em;
-  font-weight:800;
+  gap:30px;
+  align-items:end;
+  margin-bottom:35px
 }
 
-.status{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  color:#bda4ff;
+.section-num{
+  font-size:11px;
+  letter-spacing:.18em;
+  color:var(--purple);
+  font-weight:800
 }
 
-.status i{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#b66cff;
-  box-shadow:0 0 14px #a75bff;
+.section-title{
+  font-size:clamp(32px,5vw,54px);
+  margin:8px 0 0;
+  letter-spacing:-.05em
+}
+
+.section-copy{
+  color:var(--muted);
+  max-width:520px;
+  line-height:1.7
+}
+
+.about-grid{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:20px
+}
+
+.panel{
+  background:linear-gradient(145deg,var(--surface),var(--surface2));
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:30px;
+  box-shadow:var(--shadow)
+}
+
+.panel p{
+  color:var(--muted);
+  line-height:1.8
 }
 
 .stats{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
+  margin-top:22px
 }
 
 .stat{
-  border:1px solid rgba(166,101,255,.13);
-  background:rgba(9,7,13,.45);
-  border-radius:12px;
-  padding:16px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:18px
 }
 
-.stat small{
-  display:block;
-  color:#786f82;
-  font-size:.68rem;
-  text-transform:uppercase;
-  letter-spacing:.11em;
-  font-weight:800;
-  margin-bottom:7px;
+.stat b{
+  font-size:25px;
+  display:block
 }
 
-.stat strong{
-  font-size:.95rem;
-}
-
-.hud-bar{
-  margin-top:18px;
-  height:5px;
-  border-radius:99px;
-  background:#17111f;
-  overflow:hidden;
-}
-
-.hud-bar span{
-  display:block;
-  width:82%;
-  height:100%;
-  background:linear-gradient(90deg,var(--purple2),var(--pink));
-  box-shadow:0 0 14px var(--purple);
-}
-
-/* Music */
-
-.music-card{
-  max-width:var(--max);
-  width:min(var(--max),calc(100% - 40px));
-  margin:-45px auto 0;
-  position:relative;
-  z-index:10;
-  border:1px solid rgba(170,105,255,.18);
-  background:rgba(16,11,24,.88);
-  backdrop-filter:blur(18px);
-  border-radius:16px;
-  padding:18px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  box-shadow:0 18px 55px rgba(0,0,0,.35);
-}
-
-.music-info{
-  min-width:0;
-}
-
-.music-label{
-  display:block;
-  color:#a77aff;
-  font-size:.65rem;
-  font-weight:900;
-  letter-spacing:.16em;
-  margin-bottom:3px;
-}
-
-.music-info h3{
-  font-size:1rem;
-}
-
-.music-info p{
-  color:#7e7489;
-  font-size:.76rem;
-}
-
-.music-player{
-  width:min(430px,48vw);
-  height:38px;
-}
-
-/* Cards */
-
-.grid{
-  display:grid;
-  gap:18px;
-}
-
-.grid-3{
-  grid-template-columns:repeat(3,1fr);
-}
-
-.grid-2{
-  grid-template-columns:repeat(2,1fr);
-}
-
-.card{
-  border:1px solid rgba(170,105,255,.13);
-  background:
-    linear-gradient(145deg,rgba(24,17,34,.82),rgba(12,9,17,.8));
-  border-radius:16px;
-  padding:24px;
-  position:relative;
-  overflow:hidden;
-  transition:.3s ease;
-}
-
-.card:after{
-  content:"";
-  position:absolute;
-  inset:-1px;
-  background:linear-gradient(120deg,transparent 30%,rgba(182,111,255,.1),transparent 70%);
-  transform:translateX(-100%);
-  transition:.5s;
-  pointer-events:none;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-  border-color:rgba(170,105,255,.32);
-  box-shadow:0 20px 55px rgba(55,22,100,.22);
-}
-
-.card:hover:after{
-  transform:translateX(100%);
-}
-
-.card h3{
-  font-size:1.08rem;
-  margin-bottom:9px;
-}
-
-.card p{
+.stat span{
+  font-size:11px;
   color:var(--muted);
-  font-size:.9rem;
+  text-transform:uppercase;
+  letter-spacing:.12em
 }
 
-.icon{
-  width:39px;
-  height:39px;
+.skills{
   display:grid;
-  place-items:center;
-  border-radius:10px;
-  background:rgba(130,69,255,.1);
-  border:1px solid rgba(157,94,255,.16);
-  margin-bottom:18px;
-  color:#c59aff;
-  font-weight:900;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px
 }
 
-/* About */
-
-.about-grid{
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:45px;
-  align-items:start;
+.skill{
+  padding:20px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:16px
 }
 
-.about-text{
-  color:#bbb2c4;
-  font-size:1rem;
-}
-
-.about-text p+p{
-  margin-top:17px;
-}
-
-.quick-facts{
-  display:grid;
-  gap:10px;
-}
-
-.fact{
+.skill-top{
   display:flex;
   justify-content:space-between;
-  gap:20px;
-  padding:13px 0;
-  border-bottom:1px solid rgba(170,105,255,.1);
+  gap:10px;
+  font-weight:750
 }
 
-.fact span:first-child{
-  color:#756b80;
-  font-size:.76rem;
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  font-weight:800;
+.skill small{color:var(--muted)}
+
+.meter{
+  height:5px;
+  background:var(--line);
+  border-radius:99px;
+  margin-top:15px;
+  overflow:hidden
 }
 
-.fact span:last-child{
-  color:#ddd4e5;
-  text-align:right;
-  font-size:.86rem;
+.meter i{
+  display:block;
+  height:100%;
+  width:var(--w);
+  background:linear-gradient(90deg,var(--violet),var(--pink));
+  border-radius:inherit
 }
 
-/* Timeline */
-
-.timeline{
-  position:relative;
-  margin-top:20px;
+.projects{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px
 }
-
-.timeline:before{
-  content:"";
-  position:absolute;
-  left:8px;
-  top:4px;
-  bottom:4px;
-  width:1px;
-  background:linear-gradient(var(--purple),rgba(155,92,255,.05));
-}
-
-.timeline-item{
-  position:relative;
-  padding-left:42px;
-  padding-bottom:38px;
-}
-
-.timeline-item:last-child{
-  padding-bottom:0;
-}
-
-.timeline-dot{
-  position:absolute;
-  left:3px;
-  top:3px;
-  width:11px;
-  height:11px;
-  border-radius:50%;
-  background:#a86aff;
-  box-shadow:0 0 16px rgba(166,96,255,.7);
-}
-
-.timeline-year{
-  color:#a77aff;
-  font-size:.72rem;
-  font-weight:900;
-  letter-spacing:.14em;
-}
-
-.timeline-item h3{
-  margin-top:6px;
-  font-size:1.15rem;
-}
-
-.timeline-item p{
-  color:#90869a;
-  margin-top:5px;
-  font-size:.88rem;
-}
-
-/* Skills */
-
-.skill-list{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:16px;
-}
-
-.tag{
-  border:1px solid rgba(168,102,255,.16);
-  background:rgba(107,52,190,.08);
-  color:#c7b5dc;
-  padding:6px 9px;
-  border-radius:7px;
-  font-size:.73rem;
-  font-weight:750;
-}
-
-/* Projects */
 
 .project{
-  min-height:270px;
+  min-height:340px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:25px;
+  background:
+    radial-gradient(circle at 85% 10%,rgba(146,72,235,.18),transparent 35%),
+    var(--surface);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  position:relative;
+  overflow:hidden;
+  transition:.25s
+}
+
+.project:hover{
+  transform:translateY(-5px);
+  border-color:#69419a;
+  box-shadow:var(--shadow)
 }
 
 .project:before{
   content:"PROJECT SLOT";
   position:absolute;
-  right:18px;
-  top:17px;
-  color:rgba(191,139,255,.28);
-  font-size:.55rem;
-  font-weight:900;
-  letter-spacing:.16em;
-}
-
-.project-meta{
-  color:#a77aff;
-  font-size:.67rem;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  font-weight:900;
-  margin-bottom:9px;
+  top:25px;
+  left:25px;
+  font-size:10px;
+  letter-spacing:.2em;
+  color:var(--purple);
+  font-weight:900
 }
 
 .project h3{
-  font-size:1.35rem;
+  font-size:29px;
+  margin:0 0 8px
 }
 
 .project p{
-  margin-top:10px;
+  color:var(--muted);
+  max-width:500px;
+  line-height:1.6;
+  margin:0
 }
 
-.project-tags{
-  margin-top:20px;
+.chips{
   display:flex;
+  gap:7px;
   flex-wrap:wrap;
-  gap:7px;
+  margin-top:17px
 }
 
-details{
-  margin-top:22px;
-  border-top:1px solid rgba(170,105,255,.1);
-  padding-top:15px;
+.chip{
+  font-size:10px;
+  border:1px solid var(--line);
+  padding:6px 9px;
+  border-radius:99px;
+  color:var(--muted)
 }
 
-summary{
-  cursor:pointer;
-  color:#c7a5ff;
-  font-size:.8rem;
-  font-weight:850;
+.stack{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px
 }
 
-.details-content{
-  padding-top:17px;
-  color:#958b9e;
-  font-size:.85rem;
+.stack .panel{
+  text-align:center;
+  padding:25px 15px
 }
 
-.details-content strong{
-  color:#d7c8e4;
+.stack strong{
+  display:block;
+  font-size:16px
 }
 
-/* Terminal */
-
-.terminal{
-  border:1px solid rgba(169,104,255,.18);
-  border-radius:15px;
-  background:#09070d;
-  overflow:hidden;
-  box-shadow:0 25px 70px rgba(0,0,0,.35);
+.stack span{
+  font-size:11px;
+  color:var(--muted);
+  display:block;
+  margin-top:6px
 }
 
-.terminal-top{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:12px 15px;
-  border-bottom:1px solid rgba(170,105,255,.1);
-  background:#0d0a12;
+.contact{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px
 }
-
-.terminal-top i{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#332a3c;
-}
-
-.terminal-name{
-  margin-left:8px;
-  color:#70667a;
-  font-size:.68rem;
-  font-family:monospace;
-}
-
-.terminal-body{
-  padding:24px;
-  font-family:"Courier New",monospace;
-  font-size:.8rem;
-  color:#a99bb4;
-  min-height:250px;
-}
-
-.terminal-line{
-  margin-bottom:8px;
-}
-
-.prompt{
-  color:#bd83ff;
-}
-
-.command{
-  color:#e4d9ee;
-}
-
-.comment{
-  color:#665d70;
-}
-
-/* Contact */
 
 .contact-box{
-  border:1px solid rgba(168,101,255,.2);
-  border-radius:20px;
-  padding:45px;
-  background:
-    radial-gradient(circle at 80% 20%,rgba(143,68,255,.13),transparent 30%),
-    linear-gradient(145deg,rgba(27,18,40,.88),rgba(11,8,15,.9));
-  text-align:center;
+  padding:35px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:linear-gradient(135deg,rgba(115,55,195,.14),var(--surface))
+}
+
+.contact-box h2{
+  font-size:40px;
+  letter-spacing:-.05em;
+  margin:0 0 12px
 }
 
 .contact-box p{
-  max-width:620px;
-  margin:15px auto 25px;
-  color:#9f95a9;
+  color:var(--muted);
+  line-height:1.7
 }
 
-.contact-actions{
+.socials{
   display:flex;
-  justify-content:center;
   flex-wrap:wrap;
   gap:10px;
+  margin-top:24px
 }
 
-/* Footer */
+.social{
+  border:1px solid var(--line);
+  padding:10px 13px;
+  border-radius:11px;
+  color:var(--muted);
+  font-size:12px
+}
+
+.social:hover{
+  color:var(--text);
+  border-color:var(--purple)
+}
 
 footer{
-  border-top:1px solid rgba(170,105,255,.1);
-  padding:28px 0;
-  color:#655c6c;
-  font-size:.72rem;
-}
-
-.footer-inner{
+  border-top:1px solid var(--line);
+  padding:30px 0;
+  color:var(--muted);
+  font-size:11px;
   display:flex;
   justify-content:space-between;
-  gap:20px;
+  gap:15px
 }
 
-/* Reveal */
+.purple{color:var(--purple)}
 
-.reveal{
-  opacity:0;
-  transform:translateY(22px);
-  transition:opacity .7s ease,transform .7s ease;
+@media(max-width:760px){
+  .container{
+    width:min(100% - 28px,1120px)
+  }
+
+  .navlinks{display:none}
+  .menu{display:block}
+
+  .hero{
+    padding:75px 0 90px
+  }
+
+  .hero h1{font-size:70px}
+
+  .about-grid,
+  .contact,
+  .projects{
+    grid-template-columns:1fr
+  }
+
+  .skills{
+    grid-template-columns:1fr 1fr
+  }
+
+  .stack{
+    grid-template-columns:1fr 1fr
+  }
+
+  .section-head{
+    display:block
+  }
+
+  .section-copy{
+    margin-top:14px
+  }
+
+  section{
+    padding:65px 0
+  }
 }
 
-.reveal.visible{
-  opacity:1;
-  transform:none;
+@media(max-width:430px){
+  .skills{
+    grid-template-columns:1fr
+  }
+
+  .hero h1{
+    font-size:58px
+  }
+}
+</style>
+
+<style>
+.music-card{
+  margin:0 auto 10px;
+  width:min(1120px,calc(100% - 40px));
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(115,55,195,.16),var(--surface));
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  box-shadow:var(--shadow)
 }
 
-/* Mobile */
+.music-icon{
+  width:44px;
+  height:44px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--violet),var(--purple));
+  color:#fff;
+  font-size:18px;
+  flex:none
+}
 
-@media(max-width:850px){
+.music-meta{
+  min-width:150px
+}
 
-  .nav-links{
-    display:none;
+.music-meta small{
+  display:block;
+  color:var(--purple);
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:4px
+}
+
+.music-meta strong{
+  font-size:15px
+}
+
+.music-player{
+  width:100%;
+  height:34px;
+  accent-color:var(--purple)
+}
+
+@media(max-width:760px){
+  .music-card{
+    width:min(100% - 28px,1120px);
+    padding:13px
+  }
+
+  .music-meta{
+    min-width:110px
+  }
+
+  .music-meta strong{
+    font-size:13px
+  }
+}
+</style>
+
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:light-dark(#f7f4fb,#07060b);
+  --surface:light-dark(#ffffff,#0d0b13);
+  --surface2:light-dark(#f0ebf7,#15111d);
+  --text:light-dark(#17121f,#f8f4ff);
+  --muted:light-dark(#665c70,#aaa2bb);
+  --line:light-dark(#ddd3e6,#2a2238);
+  --purple:light-dark(#7136bd,#a970ff);
+  --violet:light-dark(#54218e,#6d35c9);
+  --pink:light-dark(#a54ddd,#d58cff)
+}
+
+.app{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 12% 8%,rgba(169,112,255,.08),transparent 24%),
+    radial-gradient(circle at 90% 36%,rgba(213,140,255,.06),transparent 22%),
+    var(--bg)
+}
+
+.app::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.24;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 92%)
+}
+
+.fx-grid{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.2;
+  background:
+    radial-gradient(circle at 50% 10%,rgba(169,112,255,.08),transparent 35%),
+    linear-gradient(transparent 0 49.5%,rgba(169,112,255,.08) 50%,transparent 50.5%);
+  background-size:100% 100%,100% 9px
+}
+
+.fx-orb{
+  position:absolute;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  filter:blur(16px);
+  pointer-events:none;
+  z-index:-1;
+  opacity:.22;
+  animation:orbFloat 16s ease-in-out infinite
+}
+
+.fx-orb.orb-a{
+  top:7%;
+  right:-90px;
+  background:radial-gradient(circle,rgba(169,112,255,.35),transparent 65%)
+}
+
+.fx-orb.orb-b{
+  top:42%;
+  left:-160px;
+  background:radial-gradient(circle,rgba(213,140,255,.24),transparent 66%);
+  animation-delay:-6s
+}
+
+@keyframes orbFloat{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(0,28px,0) scale(1.07)}
+}
+
+.nav{
+  position:relative;
+  z-index:30;
+  backdrop-filter:blur(12px)
+}
+
+.brand{position:relative}
+
+.brand::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-8px;
+  width:26px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--purple),transparent);
+  box-shadow:0 0 18px rgba(169,112,255,.45)
+}
+
+.navlinks{
+  transition:opacity .2s ease,transform .2s ease
+}
+
+@media(max-width:760px){
+  .nav{position:relative}
+
+  .navlinks.open{
+    display:flex;
     position:absolute;
     top:76px;
     left:0;
     right:0;
-    padding:15px 20px 20px;
-    background:rgba(8,6,12,.96);
-    border-bottom:1px solid var(--line);
+    padding:14px;
     flex-direction:column;
-    align-items:flex-start;
+    gap:4px;
+    border:1px solid var(--line);
+    border-top:0;
+    background:color-mix(in srgb,var(--surface) 94%,transparent);
+    backdrop-filter:blur(18px);
+    border-radius:0 0 16px 16px;
+    box-shadow:0 22px 50px rgba(0,0,0,.18)
   }
 
-  .nav-links.open{
-    display:flex;
+  .navlinks.open a{
+    padding:12px;
+    border-radius:10px
   }
 
-  .menu{
-    display:block;
-  }
-
-  .hero-grid,
-  .about-grid{
-    grid-template-columns:1fr;
-  }
-
-  .hero{
-    padding-top:130px;
-  }
-
-  .hero h1{
-    font-size:clamp(3rem,13vw,5rem);
-  }
-
-  .grid-3{
-    grid-template-columns:1fr;
-  }
-
-  .grid-2{
-    grid-template-columns:1fr;
-  }
-
-  .music-card{
-    flex-direction:column;
-    align-items:stretch;
-  }
-
-  .music-player{
-    width:100%;
-  }
-
-  .contact-box{
-    padding:32px 22px;
-  }
-
-  .footer-inner{
-    flex-direction:column;
+  .navlinks.open a:hover{
+    background:rgba(169,112,255,.08)
   }
 }
 
-@media(max-width:500px){
+.hero{
+  min-height:670px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center
+}
 
-  .container,
-  .music-card{
-    width:min(100% - 26px, var(--max));
+.hero::after{
+  content:"RILEY / DEV";
+  position:absolute;
+  right:0;
+  bottom:32px;
+  color:var(--muted);
+  opacity:.42;
+  font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.22em
+}
+
+.hero h1{
+  text-shadow:0 0 46px rgba(169,112,255,.08)
+}
+
+.hero h1 em{
+  background-size:180% 180%;
+  animation:gradientShift 8s ease infinite
+}
+
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+.hero-status{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  width:max-content;
+  margin-top:22px;
+  padding:8px 11px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(169,112,255,.06);
+  color:var(--muted);
+  font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.15em;
+  text-transform:uppercase
+}
+
+.hero-status i,
+.terminal-dot{
+  width:7px;
+  height:7px;
+  display:inline-block;
+  border-radius:50%;
+  background:#a970ff;
+  box-shadow:0 0 16px rgba(169,112,255,.9);
+  animation:statusPulse 1.8s ease-in-out infinite
+}
+
+@keyframes statusPulse{
+  0%,100%{transform:scale(.84);opacity:.65}
+  50%{transform:scale(1.18);opacity:1}
+}
+
+.actions .btn{
+  position:relative;
+  overflow:hidden
+}
+
+.actions .btn::after{
+  content:"";
+  position:absolute;
+  inset:-100% 40% 100% -30%;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.28),transparent);
+  transform:rotate(8deg);
+  transition:transform .55s ease
+}
+
+.actions .btn:hover::after{
+  transform:translate3d(180%,0,0) rotate(8deg)
+}
+
+.section-title{position:relative}
+
+.section-title::after{
+  content:"";
+  display:block;
+  margin-top:11px;
+  width:54px;
+  height:2px;
+  border-radius:99px;
+  background:linear-gradient(90deg,var(--purple),transparent)
+}
+
+.panel,
+.skill,
+.project,
+.contact-box,
+.stack .panel{
+  position:relative;
+  overflow:hidden;
+  transition:
+    transform .28s ease,
+    border-color .28s ease,
+    box-shadow .28s ease,
+    background .28s ease
+}
+
+.panel::before,
+.skill::before,
+.project::before,
+.contact-box::before,
+.stack .panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 15%,
+    rgba(255,255,255,.03) 50%,
+    transparent 85%
+  );
+  transform:translateX(-120%);
+  transition:transform .7s ease;
+  pointer-events:none
+}
+
+.panel:hover,
+.skill:hover,
+.project:hover,
+.contact-box:hover,
+.stack .panel:hover{
+  transform:translateY(-4px);
+  border-color:color-mix(in srgb,var(--purple) 60%,var(--line));
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.18),
+    0 0 30px rgba(169,112,255,.07)
+}
+
+.panel:hover::before,
+.skill:hover::before,
+.project:hover::before,
+.contact-box:hover::before,
+.stack .panel:hover::before{
+  transform:translateX(120%)
+}
+
+.meter i{
+  box-shadow:0 0 16px rgba(169,112,255,.38)
+}
+
+.project::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(
+      transparent 0 49%,
+      rgba(169,112,255,.06) 50%,
+      transparent 51%
+    );
+  background-size:100% 7px;
+  opacity:.14
+}
+
+.project .chips,
+.project h3,
+.project p{
+  position:relative;
+  z-index:2
+}
+
+.chip{
+  transition:.2s ease
+}
+
+.chip:hover{
+  color:var(--text);
+  border-color:var(--purple);
+  box-shadow:0 0 18px rgba(169,112,255,.12)
+}
+
+.terminal-section{padding-top:22px}
+
+.terminal{
+  border:1px solid var(--line);
+  border-radius:22px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(169,112,255,.12),transparent 28%),
+    #09080d;
+  box-shadow:0 24px 80px rgba(0,0,0,.34)
+}
+
+.terminal-bar{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:13px 15px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.025)
+}
+
+.terminal-body{
+  padding:28px;
+  font:500 13px/1.9 ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:#d8d0e5
+}
+
+.terminal-row{
+  display:block;
+  margin-bottom:4px
+}
+
+.terminal-prompt{color:#a970ff}
+.terminal-dim{color:#847a92}
+.terminal-strong{color:#f7f3ff}
+
+.build-section{padding-top:26px}
+
+.build-card{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:20px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:30px;
+  background:
+    linear-gradient(135deg,rgba(109,53,201,.16),transparent 60%),
+    var(--surface);
+  box-shadow:0 24px 80px rgba(0,0,0,.34);
+  position:relative;
+  overflow:hidden
+}
+
+.build-card::after{
+  content:"IN DEVELOPMENT";
+  position:absolute;
+  right:-32px;
+  top:18px;
+  transform:rotate(33deg);
+  padding:7px 38px;
+  border:1px solid rgba(169,112,255,.22);
+  background:rgba(169,112,255,.06);
+  color:var(--purple);
+  font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.18em
+}
+
+.build-kicker{
+  color:var(--purple);
+  font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.18em;
+  text-transform:uppercase
+}
+
+.build-title{
+  margin:12px 0 10px;
+  font-size:clamp(30px,4vw,48px);
+  letter-spacing:-.055em
+}
+
+.build-copy{
+  margin:0;
+  color:var(--muted);
+  line-height:1.7;
+  max-width:650px
+}
+
+.build-status{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  flex-direction:column;
+  min-height:100%;
+  padding-right:20px
+}
+
+.build-label{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:10px;
+  color:var(--muted);
+  font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+
+.build-rail{
+  width:100%;
+  height:12px;
+  border:1px solid var(--line);
+  padding:2px;
+  border-radius:99px;
+  overflow:hidden;
+  background:rgba(169,112,255,.03)
+}
+
+.build-rail i{
+  display:block;
+  height:100%;
+  width:46%;
+  border-radius:99px;
+  background:repeating-linear-gradient(
+    90deg,
+    var(--violet) 0 15px,
+    var(--purple) 15px 30px
+  );
+  box-shadow:0 0 18px rgba(169,112,255,.4);
+  animation:buildPulse 2.8s ease-in-out infinite
+}
+
+@keyframes buildPulse{
+  0%,100%{filter:brightness(.92)}
+  50%{filter:brightness(1.18)}
+}
+
+.build-foot{
+  display:flex;
+  justify-content:space-between;
+  width:100%;
+  gap:12px;
+  margin-top:9px;
+  color:var(--muted);
+  font:700 9px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace
+}
+
+.social{
+  transition:.2s ease
+}
+
+.social:hover{
+  background:rgba(169,112,255,.05);
+  transform:translateY(-2px)
+}
+
+/* MUSIC PLAYER */
+.music-card{
+  position:sticky;
+  top:12px;
+  z-index:25;
+  backdrop-filter:blur(18px);
+  transition:.25s ease
+}
+
+.music-card.playing{
+  border-color:color-mix(in srgb,var(--purple) 58%,var(--line));
+  box-shadow:
+    0 24px 80px rgba(0,0,0,.34),
+    0 0 36px rgba(169,112,255,.1)
+}
+
+.music-card.playing .music-icon{
+  animation:musicSpin 4s linear infinite;
+  box-shadow:0 0 24px rgba(169,112,255,.34)
+}
+
+@keyframes musicSpin{
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
+}
+
+.music-card.is-custom{
+  display:grid;
+  grid-template-columns:auto minmax(145px,190px) 1fr;
+  gap:16px;
+  align-items:center
+}
+
+.music-card.is-custom .music-player{
+  display:none
+}
+
+.custom-controls{
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  gap:11px;
+  align-items:center;
+  min-width:0
+}
+
+.music-toggle{
+  width:36px;
+  height:36px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:var(--surface2);
+  color:var(--text);
+  transition:.18s ease;
+  cursor:pointer
+}
+
+.music-toggle:hover{
+  border-color:var(--purple);
+  transform:translateY(-1px)
+}
+
+.music-progress{
+  width:100%;
+  appearance:none;
+  height:4px;
+  border-radius:99px;
+  background:var(--line);
+  outline:none
+}
+
+.music-progress::-webkit-slider-thumb{
+  appearance:none;
+  width:12px;
+  height:12px;
+  border:0;
+  border-radius:50%;
+  background:var(--purple);
+  box-shadow:0 0 14px rgba(169,112,255,.65)
+}
+
+.music-progress::-moz-range-thumb{
+  width:12px;
+  height:12px;
+  border:0;
+  border-radius:50%;
+  background:var(--purple);
+  box-shadow:0 0 14px rgba(169,112,255,.65)
+}
+
+.music-time{
+  min-width:64px;
+  text-align:right;
+  color:var(--muted);
+  font:700 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace
+}
+
+.playing-wave{
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+  width:26px;
+  height:24px;
+  margin-left:auto;
+  opacity:.22
+}
+
+.playing-wave i{
+  flex:1;
+  min-width:2px;
+  border-radius:999px 999px 0 0;
+  background:linear-gradient(var(--pink),var(--violet));
+  animation:wave 1s ease-in-out infinite
+}
+
+.playing-wave i:nth-child(1){height:36%;animation-delay:-.1s}
+.playing-wave i:nth-child(2){height:72%;animation-delay:-.2s}
+.playing-wave i:nth-child(3){height:52%;animation-delay:-.3s}
+.playing-wave i:nth-child(4){height:86%;animation-delay:-.4s}
+.playing-wave i:nth-child(5){height:42%;animation-delay:-.5s}
+
+.music-card.playing .playing-wave{opacity:1}
+
+@keyframes wave{
+  0%,100%{transform:scaleY(.55)}
+  50%{transform:scaleY(1)}
+}
+
+.cursor-dot,
+.cursor-ring{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:0;
+  transform:translate(-50%,-50%)
+}
+
+.cursor-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#f3e9ff;
+  box-shadow:0 0 16px rgba(169,112,255,.9)
+}
+
+.cursor-ring{
+  width:32px;
+  height:32px;
+  border:1px solid rgba(169,112,255,.55);
+  border-radius:50%;
+  transition:width .2s ease,height .2s ease,border-color .2s ease
+}
+
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button,
+body.has-custom-cursor input{
+  cursor:none
+}
+
+body.has-custom-cursor .cursor-dot,
+body.has-custom-cursor .cursor-ring{
+  opacity:1
+}
+
+body.cursor-active .cursor-ring{
+  width:48px;
+  height:48px;
+  border-color:rgba(213,140,255,.82)
+}
+
+.scroll-progress{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:2px;
+  transform-origin:left center;
+  transform:scaleX(0);
+  z-index:9998;
+  background:linear-gradient(90deg,var(--violet),var(--purple),var(--pink));
+  box-shadow:0 0 14px rgba(169,112,255,.55)
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(22px);
+  transition:opacity .7s ease,transform .7s ease
+}
+
+.reveal.in-view{
+  opacity:1;
+  transform:none
+}
+
+@media(max-width:860px){
+  .music-card.is-custom{
+    grid-template-columns:auto 1fr
   }
 
-  section{
-    padding:85px 0;
+  .custom-controls{
+    grid-column:1/-1
   }
 
-  .stats{
-    grid-template-columns:1fr;
+  .build-card{
+    grid-template-columns:1fr
+  }
+
+  .build-status{
+    padding-right:0
+  }
+}
+
+@media(max-width:760px){
+  .hero{min-height:590px}
+  .hero::after{right:12px}
+  .music-card{top:8px}
+}
+
+@media(max-width:560px){
+  .playing-wave{display:none}
+
+  .music-card.is-custom .music-meta{
+    min-width:0
+  }
+
+  .music-card.is-custom .music-meta strong{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis
+  }
+
+  .terminal-body{
+    padding:20px;
+    font-size:11px
+  }
+
+  .build-card{
+    padding:22px
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,
+  *::before{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important
+  }
+
+  .reveal{
+    opacity:1;
+    transform:none
   }
 }
 </style>
@@ -902,1046 +1277,1259 @@ footer{
 
 <body>
 
-<div id="progress"></div>
+<div class="scroll-progress"></div>
 
-<header>
-  <nav class="nav">
-    <a href="#top" class="logo">
-      <span class="logo-mark"><span>R</span></span>
-      RILEY / DEV
-    </a>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
 
-    <div class="nav-links" id="navLinks">
-      <a href="#about">ABOUT</a>
-      <a href="#skills">SKILLS</a>
-      <a href="#projects">PROJECTS</a>
-      <a href="#contact">CONTACT</a>
-    </div>
+<div class="app">
 
-    <button class="menu" id="menuBtn">MENU</button>
-  </nav>
+<div class="fx-grid"></div>
+<div class="fx-orb orb-a"></div>
+<div class="fx-orb orb-b"></div>
+
+<header class="container">
+<nav class="nav">
+
+<a class="brand" href="#top">
+RILEY<span>/DEV</span>
+</a>
+
+<div class="navlinks">
+<a href="#about">About</a>
+<a href="#skills">Skills</a>
+<a href="#projects">Projects</a>
+<a href="#contact">Contact</a>
+</div>
+
+<button class="menu" type="button" aria-label="Open menu">
+☰
+</button>
+
+</nav>
 </header>
+
+<!-- MUSIC PLAYER -->
+
+<div class="music-card is-custom" id="musicCard">
+
+<div class="music-icon">♫</div>
+
+<div class="music-meta">
+<small>Now Playing</small>
+<strong id="trackTitle">Telepatía</strong>
+</div>
+
+<audio
+class="music-player"
+id="musicPlayer"
+preload="metadata">
+</audio>
+
+<div class="custom-controls">
+
+<button
+class="music-toggle"
+id="musicToggle"
+type="button"
+aria-label="Play music">
+▶
+</button>
+
+<input
+class="music-progress"
+id="musicProgress"
+type="range"
+min="0"
+max="100"
+value="0"
+step="0.1"
+aria-label="Music progress">
+
+<div class="music-time" id="musicTime">
+0:00 / 0:00
+</div>
+
+<div class="playing-wave" aria-hidden="true">
+<i></i><i></i><i></i><i></i><i></i>
+</div>
+
+</div>
+
+</div>
 
 <main id="top">
 
 <section class="hero">
-  <div class="hero-orb orb1"></div>
-  <div class="hero-orb orb2"></div>
+<div class="container">
 
-  <div class="container hero-grid">
+<div class="eyebrow">GAMEPLAY PROGRAMMER · VEHICLE SYSTEMS</div>
 
-    <div class="reveal">
-      <div class="eyebrow">GAMEPLAY PROGRAMMER</div>
+<h1>
+Riley<br>
+<em>builds movement.</em>
+</h1>
 
-      <h1>
-        <span class="gradient-text">
-          Vehicle systems.
-        </span>
-        <br>
-        Gameplay that feels right.
-      </h1>
+<p class="tagline">
+Gameplay programmer focused on vehicles, physics, racing systems,
+multiplayer behavior, and making complicated systems feel simple.
+</p>
 
-      <p class="hero-sub">
-        Riley is a gameplay programmer specializing in vehicle systems,
-        racing mechanics, physics, and interactive gameplay across
-        Unreal Engine and Roblox.
-      </p>
+<div class="hero-status">
+<i></i>
+AVAILABLE FOR GAMEPLAY / VEHICLE WORK
+</div>
 
-      <div class="hero-actions">
-        <a class="btn primary" href="#projects">VIEW PROJECTS</a>
-        <a class="btn" href="#contact">CONTACT</a>
-      </div>
-    </div>
+<div class="actions">
+<a class="btn primary" href="#projects">View Projects</a>
+<a class="btn" href="#contact">Contact Riley</a>
+</div>
 
-    <div class="hud reveal">
-      <div class="hud-top">
-        <span>DEV_STATUS // 01</span>
-
-        <span class="status">
-          <i></i>
-          ONLINE
-        </span>
-      </div>
-
-      <div class="stats">
-
-        <div class="stat">
-          <small>Primary Engine</small>
-          <strong>Unreal Engine 4 / 5</strong>
-        </div>
-
-        <div class="stat">
-          <small>Primary Language</small>
-          <strong>C++</strong>
-        </div>
-
-        <div class="stat">
-          <small>Additional Platform</small>
-          <strong>Roblox</strong>
-        </div>
-
-        <div class="stat">
-          <small>Focus</small>
-          <strong>Vehicle Physics</strong>
-        </div>
-
-      </div>
-
-      <div class="hud-bar">
-        <span></span>
-      </div>
-    </div>
-
-  </div>
+</div>
 </section>
 
-<!-- MUSIC PLAYER -->
-<div class="music-card reveal">
+<section id="about">
+<div class="container">
 
-  <div class="music-info">
-    <span class="music-label">NOW PLAYING</span>
-    <h3>Telepatía</h3>
-    <p>Riley's current track</p>
-  </div>
+<div class="section-head">
 
-  <audio
-    class="music-player"
-    controls
-    preload="metadata"
-    src="https://myurye.github.io/RileyDev/telepatia.mp3">
-  </audio>
+<div>
+<div class="section-num">01 / ABOUT RILEY</div>
+<h2 class="section-title">Systems that feel good.</h2>
+</div>
+
+<p class="section-copy">
+A computer science graduate and gameplay programmer with a particular
+interest in cars, physics, and systems-driven gameplay.
+</p>
 
 </div>
 
-<section id="about">
-  <div class="container">
+<div class="about-grid">
 
-    <div class="section-head reveal">
-      <div class="eyebrow">ABOUT</div>
-      <h2>Systems first. Feel second.</h2>
-      <p class="section-copy">
-        Complex gameplay systems should disappear into the experience.
-        The player should feel the result, not the code behind it.
-      </p>
-    </div>
+<article class="panel">
 
-    <div class="about-grid">
+<p>
+Most of Riley's work centers around vehicle behavior:
+acceleration, braking, steering, traction, suspension, collisions,
+AI traffic, and the systems that make a vehicle actually feel good to drive.
+</p>
 
-      <div class="about-text reveal">
+<p>
+She enjoys taking systems that look complicated under the hood and
+turning them into gameplay that feels simple, responsive, and satisfying.
+When something feels "off," she likes breaking it down until she finds
+the exact system responsible.
+</p>
 
-        <p>
-          Riley is a computer science graduate and gameplay programmer
-          focused on cars, physics, and systems-driven gameplay.
-          Most of her work centers around vehicle behavior:
-          acceleration, braking, steering, traction, suspension,
-          collisions, AI traffic, and systems that make a vehicle
-          feel good to drive.
-        </p>
+</article>
 
-        <p>
-          She likes taking complex systems and turning them into
-          gameplay that feels simple, responsive, and satisfying.
-          She also enjoys breaking down anything that feels "off"
-          to find the exact system responsible.
-        </p>
+<aside class="panel">
 
-      </div>
+<div class="eyebrow">Quick facts</div>
 
-      <div class="quick-facts reveal">
+<div class="stats">
 
-        <div class="fact">
-          <span>Based In</span>
-          <span>North America</span>
-        </div>
+<div class="stat">
+<b>B.S.</b>
+<span>Computer Science</span>
+</div>
 
-        <div class="fact">
-          <span>Education</span>
-          <span>B.S. Computer Science</span>
-        </div>
+<div class="stat">
+<b>C++</b>
+<span>Primary language</span>
+</div>
 
-        <div class="fact">
-          <span>Specialization</span>
-          <span>Gameplay / Vehicle Systems</span>
-        </div>
+<div class="stat">
+<b>UE4 / 5</b>
+<span>Primary engine</span>
+</div>
 
-        <div class="fact">
-          <span>Favorite Area</span>
-          <span>Vehicle Gameplay</span>
-        </div>
+<div class="stat">
+<b>Vehicle</b>
+<span>Gameplay specialty</span>
+</div>
 
-        <div class="fact">
-          <span>Current Focus</span>
-          <span>Physics / Optimization</span>
-        </div>
+<div class="stat">
+<b>North America</b>
+<span>Based in</span>
+</div>
 
-      </div>
+<div class="stat">
+<b>Roblox</b>
+<span>Additional platform</span>
+</div>
 
-    </div>
-  </div>
+</div>
+
+</aside>
+
+</div>
+</div>
 </section>
 
-<section>
-  <div class="container">
+<section id="experience">
+<div class="container">
 
-    <div class="section-head reveal">
-      <div class="eyebrow">CAREER</div>
-      <h2>Racing systems, built over time.</h2>
-    </div>
+<div class="section-head">
 
-    <div class="timeline">
+<div>
+<div class="section-num">01.5 / CAREER TIMELINE</div>
+<h2 class="section-title">Five stops. One specialty.</h2>
+</div>
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">2021</div>
-        <h3>Hot Wheels Unleashed — Junior Gameplay Programmer</h3>
-        <p>
-          First professional-scale racing production experience.
-          Worked on vehicle behavior, race systems, collision issues,
-          debugging, and gameplay-side systems.
-        </p>
-      </div>
+<p class="section-copy">
+Riley's experience moves from small-team Roblox work into professional
+racing and vehicle-focused development.
+</p>
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">2022 — 2024</div>
-        <h3>Highway Frenzy — Gameplay Programmer</h3>
-        <p>
-          Small-team Roblox development focused on vehicle scripting,
-          traffic, UI, player data, racing systems, networking,
-          and optimization.
-        </p>
-      </div>
+</div>
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">2023</div>
-        <h3>Midnight Chasers: Highway Racing — Vehicle Systems Programmer</h3>
-        <p>
-          High-speed highway driving, handling, multiplayer vehicle
-          behavior, customization, traffic interaction, and optimization.
-        </p>
-      </div>
+<div class="timeline">
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">2024</div>
-        <h3>Monster Jam Showdown — Vehicle Systems Programmer</h3>
-        <p>
-          Vehicle gameplay, terrain interaction, collisions,
-          suspension, AI, reset systems, and physics debugging.
-        </p>
-      </div>
+<article class="timeline-item">
+<div class="timeline-year">2021</div>
+<div class="timeline-card panel">
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">2025</div>
-        <h3>RENNSPORT — Vehicle Gameplay Programmer</h3>
-        <p>
-          Simulation-oriented vehicle gameplay including handling,
-          traction, braking, steering, race states, profiling,
-          networking, and debugging.
-        </p>
-      </div>
+<div class="timeline-top">
+<span class="eyebrow">PROFESSIONAL RACING</span>
+<span class="timeline-status">RELEASED</span>
+</div>
 
-    </div>
-  </div>
+<h3>Hot Wheels Unleashed</h3>
+<strong>Junior Gameplay Programmer</strong>
+
+<p>
+Gameplay-side vehicle behavior, collision issues, race/checkpoint logic,
+AI racing behavior, profiling, and vehicle/track interactions.
+</p>
+
+<div class="chips">
+<span class="chip">C++</span>
+<span class="chip">UE4</span>
+<span class="chip">BLUEPRINTS</span>
+</div>
+
+</div>
+</article>
+
+<article class="timeline-item">
+<div class="timeline-year">2022–2024</div>
+<div class="timeline-card panel">
+
+<div class="timeline-top">
+<span class="eyebrow">ROBLOX · SMALL TEAM</span>
+<span class="timeline-status">LIVE</span>
+</div>
+
+<h3>Highway Frenzy</h3>
+<strong>Gameplay Programmer</strong>
+
+<p>
+AI traffic, vehicle systems, race logic, customization, player data,
+multiplayer synchronization, and optimization.
+</p>
+
+<div class="chips">
+<span class="chip">LUAU</span>
+<span class="chip">AI TRAFFIC</span>
+<span class="chip">DATASTORE</span>
+</div>
+
+</div>
+</article>
+
+<article class="timeline-item">
+<div class="timeline-year">2023</div>
+<div class="timeline-card panel">
+
+<div class="timeline-top">
+<span class="eyebrow">ROBLOX · SMALL TEAM</span>
+<span class="timeline-status">LIVE</span>
+</div>
+
+<h3>Midnight Chasers</h3>
+<strong>Vehicle Systems Programmer</strong>
+
+<p>
+High-speed highway driving, handling, drifting, speed-sensitive steering,
+spawning, customization, replication, and vehicle performance.
+</p>
+
+<div class="chips">
+<span class="chip">LUAU</span>
+<span class="chip">VEHICLE PHYSICS</span>
+<span class="chip">MULTIPLAYER</span>
+</div>
+
+</div>
+</article>
+
+<article class="timeline-item">
+<div class="timeline-year">2024</div>
+<div class="timeline-card panel">
+
+<div class="timeline-top">
+<span class="eyebrow">PROFESSIONAL RACING</span>
+<span class="timeline-status">RELEASED</span>
+</div>
+
+<h3>Monster Jam Showdown</h3>
+<strong>Vehicle Systems Programmer</strong>
+
+<p>
+Vehicle gameplay, suspension and landing behavior, terrain interaction,
+collisions, race systems, AI, and physics debugging.
+</p>
+
+<div class="chips">
+<span class="chip">C++</span>
+<span class="chip">UE5</span>
+<span class="chip">CHAOS PHYSICS</span>
+</div>
+
+</div>
+</article>
+
+<article class="timeline-item">
+<div class="timeline-year">2025</div>
+<div class="timeline-card panel">
+
+<div class="timeline-top">
+<span class="eyebrow">PROFESSIONAL SIMULATION</span>
+<span class="timeline-status">RELEASED</span>
+</div>
+
+<h3>RENNSPORT</h3>
+<strong>Vehicle Gameplay Programmer</strong>
+
+<p>
+Simulation-oriented vehicle gameplay, handling, traction, braking,
+steering, race-state systems, synchronization, profiling, and debugging.
+</p>
+
+<div class="chips">
+<span class="chip">C++</span>
+<span class="chip">UE5</span>
+<span class="chip">NETWORKING</span>
+</div>
+
+</div>
+</article>
+
+</div>
+</div>
 </section>
 
 <section id="skills">
-  <div class="container">
+<div class="container">
 
-    <div class="section-head reveal">
-      <div class="eyebrow">SPECIALIZATION</div>
-      <h2>What Riley actually builds.</h2>
-    </div>
+<div class="section-head">
 
-    <div class="grid grid-3">
+<div>
+<div class="section-num">02 / SPECIALIZATIONS</div>
+<h2 class="section-title">What Riley actually does.</h2>
+</div>
 
-      <div class="card reveal">
-        <div class="icon">01</div>
-        <h3>Vehicle Systems</h3>
-        <p>
-          Handling, acceleration, braking, steering, traction,
-          suspension, vehicle states, collision behavior,
-          reset/recovery, and tuning.
-        </p>
+<p class="section-copy">
+The strongest part of Riley's portfolio is not a list of languages.
+It's the gameplay problems she knows how to solve.
+</p>
 
-        <div class="skill-list">
-          <span class="tag">Handling</span>
-          <span class="tag">Traction</span>
-          <span class="tag">Suspension</span>
-          <span class="tag">Collision</span>
-          <span class="tag">Tuning</span>
-        </div>
-      </div>
+</div>
 
-      <div class="card reveal">
-        <div class="icon">02</div>
-        <h3>Gameplay Systems</h3>
-        <p>
-          Race states, checkpoints, spawning, respawning,
-          progression, interactions, customization,
-          and modular gameplay logic.
-        </p>
+<div class="specializations">
 
-        <div class="skill-list">
-          <span class="tag">Race States</span>
-          <span class="tag">Checkpoints</span>
-          <span class="tag">Spawning</span>
-          <span class="tag">Progression</span>
-        </div>
-      </div>
+<article class="focus-card panel">
+<div class="focus-index">01</div>
+<div class="eyebrow">VEHICLE SYSTEMS</div>
+<h3>Make the car feel right.</h3>
+<p>
+Handling, acceleration, braking, steering, traction, suspension,
+vehicle states, collision behavior, reset/recovery, and tuning.
+</p>
+</article>
 
-      <div class="card reveal">
-        <div class="icon">03</div>
-        <h3>Multiplayer</h3>
-        <p>
-          Client/server architecture, replication,
-          RemoteEvents, synchronization, and
-          network debugging.
-        </p>
+<article class="focus-card panel">
+<div class="focus-index">02</div>
+<div class="eyebrow">GAMEPLAY SYSTEMS</div>
+<h3>Turn systems into play.</h3>
+<p>
+Race states, checkpoints, spawning, respawning, progression,
+interactions, customization, and modular gameplay logic.
+</p>
+</article>
 
-        <div class="skill-list">
-          <span class="tag">Replication</span>
-          <span class="tag">Networking</span>
-          <span class="tag">RemoteEvents</span>
-          <span class="tag">Debugging</span>
-        </div>
-      </div>
+<article class="focus-card panel">
+<div class="focus-index">03</div>
+<div class="eyebrow">MULTIPLAYER</div>
+<h3>Keep everyone in sync.</h3>
+<p>
+Client/server architecture, replication, RemoteEvents,
+synchronization, network debugging, and multiplayer vehicle behavior.
+</p>
+</article>
 
-      <div class="card reveal">
-        <div class="icon">04</div>
-        <h3>Optimization</h3>
-        <p>
-          Profiling physics-heavy systems, traffic systems,
-          update loops, memory usage, and removing
-          unnecessary work.
-        </p>
+<article class="focus-card panel">
+<div class="focus-index">04</div>
+<div class="eyebrow">OPTIMIZATION</div>
+<h3>Profile before guessing.</h3>
+<p>
+Physics-heavy systems, traffic, update loops, memory use,
+profiling, and reducing unnecessary work on both client and server.
+</p>
+</article>
 
-        <div class="skill-list">
-          <span class="tag">Profiling</span>
-          <span class="tag">Traffic</span>
-          <span class="tag">Physics</span>
-          <span class="tag">Memory</span>
-        </div>
-      </div>
+</div>
 
-      <div class="card reveal">
-        <div class="icon">05</div>
-        <h3>Physics</h3>
-        <p>
-          Vehicle handling, acceleration, braking,
-          steering, suspension, terrain interaction,
-          collisions, and physics debugging.
-        </p>
+<div class="stack-grid">
 
-        <div class="skill-list">
-          <span class="tag">Chaos Physics</span>
-          <span class="tag">Vehicle Physics</span>
-          <span class="tag">Terrain</span>
-          <span class="tag">Debugging</span>
-        </div>
-      </div>
+<div class="stack-label">PROGRAMMING</div>
 
-      <div class="card reveal">
-        <div class="icon">06</div>
-        <h3>Tooling</h3>
-        <p>
-          Development tools and workflows for debugging,
-          profiling, version control, iteration,
-          and production support.
-        </p>
+<div class="stack-pill">
+<strong>C++</strong>
+<span>Gameplay · vehicles · tools</span>
+</div>
 
-        <div class="skill-list">
-          <span class="tag">Visual Studio</span>
-          <span class="tag">Unreal Insights</span>
-          <span class="tag">Git</span>
-          <span class="tag">Perforce</span>
-        </div>
-      </div>
+<div class="stack-pill">
+<strong>Luau</strong>
+<span>Roblox · UI · networking · data</span>
+</div>
 
-    </div>
-  </div>
-</section>
+<div class="stack-label">ENGINES</div>
 
-<section>
-  <div class="container">
+<div class="stack-pill">
+<strong>Unreal Engine 4</strong>
+<span>Gameplay · Blueprints · debugging</span>
+</div>
 
-    <div class="section-head reveal">
-      <div class="eyebrow">TECH STACK</div>
-      <h2>The tools behind the systems.</h2>
-    </div>
+<div class="stack-pill">
+<strong>Unreal Engine 5</strong>
+<span>Gameplay · Chaos · profiling</span>
+</div>
 
-    <div class="grid grid-3">
+<div class="stack-pill">
+<strong>Roblox Studio</strong>
+<span>Gameplay · vehicles · multiplayer</span>
+</div>
 
-      <div class="card reveal">
-        <h3>C++</h3>
-        <p>
-          Gameplay systems, vehicle systems, physics integration,
-          debugging tools, and production gameplay code.
-        </p>
-      </div>
+<div class="stack-label">TOOLS</div>
 
-      <div class="card reveal">
-        <h3>Luau</h3>
-        <p>
-          Roblox gameplay, UI, networking, vehicle logic,
-          data systems, and optimization.
-        </p>
-      </div>
+<div class="stack-pill">
+<strong>Visual Studio</strong>
+<span>Development</span>
+</div>
 
-      <div class="card reveal">
-        <h3>Unreal Engine 4</h3>
-        <p>
-          Gameplay programming, vehicle systems,
-          Blueprints, debugging, and production workflows.
-        </p>
-      </div>
+<div class="stack-pill">
+<strong>Unreal Insights</strong>
+<span>Performance analysis</span>
+</div>
 
-      <div class="card reveal">
-        <h3>Unreal Engine 5</h3>
-        <p>
-          Gameplay, Chaos Physics, vehicle systems,
-          profiling, debugging, and simulation-focused work.
-        </p>
-      </div>
+<div class="stack-pill">
+<strong>Git</strong>
+<span>Version control</span>
+</div>
 
-      <div class="card reveal">
-        <h3>Roblox Studio</h3>
-        <p>
-          Gameplay, vehicles, networking, UI,
-          data persistence, and multiplayer systems.
-        </p>
-      </div>
+<div class="stack-pill">
+<strong>Perforce</strong>
+<span>Version-control workflows</span>
+</div>
 
-      <div class="card reveal">
-        <h3>Development Tools</h3>
-        <p>
-          Visual Studio, Unreal Insights, Git,
-          Roblox Developer Console, and Perforce workflows.
-        </p>
-      </div>
+</div>
 
-    </div>
-  </div>
+</div>
 </section>
 
 <section id="projects">
-  <div class="container">
-
-    <div class="section-head reveal">
-      <div class="eyebrow">PROJECTS</div>
-      <h2>Systems shipped into real games.</h2>
-    </div>
-
-    <div class="grid grid-2">
-
-      <!-- MIDNIGHT CHASERS -->
-
-      <article class="card project reveal">
-
-        <div class="project-meta">
-          Roblox · 2023
-        </div>
-
-        <h3>Midnight Chasers: Highway Racing</h3>
-
-        <p>
-          High-speed highway racing focused on vehicle handling,
-          multiplayer behavior, customization, and traffic systems.
-        </p>
-
-        <div class="project-tags">
-          <span class="tag">Luau</span>
-          <span class="tag">Roblox Physics</span>
-          <span class="tag">Networking</span>
-          <span class="tag">Vehicles</span>
-        </div>
-
-        <details>
-          <summary>VIEW DEEP DIVE</summary>
-
-          <div class="details-content">
-
-            <p>
-              <strong>Role:</strong>
-              Gameplay Programmer / Vehicle Systems Programmer
-            </p>
-
-            <p>
-              <strong>Responsibilities:</strong>
-              acceleration, braking, steering, reverse,
-              grip and traction tuning, drifting,
-              speed-sensitive steering, spawning,
-              despawning, customization, replication debugging,
-              traffic interaction, optimization,
-              and stuck/flipped/reset handling.
-            </p>
-
-            <p>
-              <strong>Systems:</strong>
-              Roblox Physics, RemoteEvents, RemoteFunctions,
-              client/server architecture, DataStoreService,
-              UI, and vehicle networking.
-            </p>
-
-            <p>
-              <strong>Learned:</strong>
-              balancing client responsiveness against
-              server-authoritative gameplay and using
-              steering interpolation, traction systems,
-              and acceleration curves to improve vehicle feel.
-            </p>
-
-            <p>
-              <strong>Favorite:</strong>
-              Handling tuning.
-            </p>
-
-          </div>
-        </details>
-
-      </article>
-
-      <!-- HOT WHEELS -->
-
-      <article class="card project reveal">
-
-        <div class="project-meta">
-          Professional Racing · 2021
-        </div>
-
-        <h3>Hot Wheels Unleashed</h3>
-
-        <p>
-          Arcade racing production involving vehicle behavior,
-          race systems, collisions, AI assistance, and debugging.
-        </p>
-
-        <div class="project-tags">
-          <span class="tag">UE4</span>
-          <span class="tag">C++</span>
-          <span class="tag">Blueprints</span>
-          <span class="tag">Vehicle Physics</span>
-        </div>
-
-        <details>
-          <summary>VIEW DEEP DIVE</summary>
-
-          <div class="details-content">
-
-            <p>
-              <strong>Role:</strong>
-              Junior Gameplay Programmer / Vehicle Gameplay Programmer
-            </p>
-
-            <p>
-              <strong>Responsibilities:</strong>
-              vehicle behavior, acceleration, braking,
-              collision, track interaction, checkpoints,
-              race states, track-exit bugs, AI racing assistance,
-              profiling, tuning, and QA support.
-            </p>
-
-            <p>
-              <strong>Technology:</strong>
-              Unreal Engine 4, C++, Blueprints,
-              vehicle physics, AI, gameplay systems,
-              collision systems, debugging, and profiling.
-            </p>
-
-            <p>
-              <strong>Learned:</strong>
-              Working inside a professional production codebase
-              and collaborating closely with designers and QA.
-            </p>
-
-            <p>
-              <strong>Favorite:</strong>
-              Balancing speed against track geometry,
-              jumps, and corners.
-            </p>
-
-          </div>
-        </details>
-
-      </article>
-
-      <!-- MONSTER JAM -->
-
-      <article class="card project reveal">
-
-        <div class="project-meta">
-          Professional Racing · 2024
-        </div>
-
-        <h3>Monster Jam Showdown</h3>
-
-        <p>
-          Arcade off-road racing focused on monster-truck
-          handling, suspension, terrain interaction, and collisions.
-        </p>
-
-        <div class="project-tags">
-          <span class="tag">UE5</span>
-          <span class="tag">C++</span>
-          <span class="tag">Chaos Physics</span>
-          <span class="tag">AI</span>
-        </div>
-
-        <details>
-          <summary>VIEW DEEP DIVE</summary>
-
-          <div class="details-content">
-
-            <p>
-              <strong>Role:</strong>
-              Gameplay Programmer / Vehicle Systems Programmer
-            </p>
-
-            <p>
-              <strong>Responsibilities:</strong>
-              vehicle gameplay, acceleration, braking,
-              suspension and landing behavior,
-              uneven terrain, collision systems,
-              checkpoints, reset/respawn systems,
-              AI, data-driven parameters, and physics QA.
-            </p>
-
-            <p>
-              <strong>Technology:</strong>
-              Unreal Engine 5, C++, Blueprints,
-              Chaos Physics, AI, and collision systems.
-            </p>
-
-            <p>
-              <strong>Learned:</strong>
-              Different handling models require different
-              approaches to suspension, center of mass,
-              wheel contact, and landing forces.
-            </p>
-
-            <p>
-              <strong>Favorite:</strong>
-              Creating a truck that feels heavy without
-              making it sluggish.
-            </p>
-
-          </div>
-        </details>
-
-      </article>
-
-      <!-- RENNSPORT -->
-
-      <article class="card project reveal">
-
-        <div class="project-meta">
-          Racing Simulation · 2025
-        </div>
-
-        <h3>RENNSPORT</h3>
-
-        <p>
-          Simulation-oriented racing systems with an emphasis
-          on handling, traction, multiplayer synchronization,
-          profiling, and debugging.
-        </p>
-
-        <div class="project-tags">
-          <span class="tag">UE5</span>
-          <span class="tag">C++</span>
-          <span class="tag">Chaos Physics</span>
-          <span class="tag">Networking</span>
-        </div>
-
-        <details>
-          <summary>VIEW DEEP DIVE</summary>
-
-          <div class="details-content">
-
-            <p>
-              <strong>Role:</strong>
-              Vehicle Gameplay Programmer
-            </p>
-
-            <p>
-              <strong>Responsibilities:</strong>
-              handling, acceleration, braking,
-              steering, traction, physics debugging,
-              race states, multiplayer synchronization,
-              profiling, debugging tools,
-              and designer collaboration.
-            </p>
-
-            <p>
-              <strong>Technology:</strong>
-              Unreal Engine 5, C++, Chaos Physics,
-              networking, profiling, and gameplay systems.
-            </p>
-
-            <p>
-              <strong>Learned:</strong>
-              Simulation-focused handling is extremely
-              sensitive to small changes in traction,
-              braking, steering, and vehicle response.
-            </p>
-
-            <p>
-              <strong>Favorite:</strong>
-              Diagnosing why a vehicle doesn't feel right
-              and finding the system responsible.
-            </p>
-
-          </div>
-        </details>
-
-      </article>
-
-      <!-- HIGHWAY FRENZY -->
-
-      <article class="card project reveal">
-
-        <div class="project-meta">
-          Roblox · 2022 — 2024
-        </div>
-
-        <h3>Highway Frenzy</h3>
-
-        <p>
-          Highway driving and arcade racing project involving
-          traffic, vehicles, racing systems, UI, data,
-          networking, and optimization.
-        </p>
-
-        <div class="project-tags">
-          <span class="tag">Roblox Studio</span>
-          <span class="tag">Luau</span>
-          <span class="tag">AI Traffic</span>
-          <span class="tag">Optimization</span>
-        </div>
-
-        <details>
-          <summary>VIEW DEEP DIVE</summary>
-
-          <div class="details-content">
-
-            <p>
-              <strong>Role:</strong>
-              Gameplay Programmer
-            </p>
-
-            <p>
-              <strong>Responsibilities:</strong>
-              traffic, spawning and despawning,
-              player vehicle detection, density optimization,
-              races, checkpoints, customization UI,
-              purchases, unlocks, saving, synchronization,
-              and overall optimization.
-            </p>
-
-            <p>
-              <strong>Technology:</strong>
-              Roblox Studio, Luau, Roblox Physics,
-              RemoteEvents, DataStoreService, UI,
-              AI traffic, and networking.
-            </p>
-
-            <p>
-              <strong>Learned:</strong>
-              Optimizing scenes with large numbers
-              of active vehicles and avoiding unnecessary
-              per-frame work.
-            </p>
-
-            <p>
-              <strong>Favorite:</strong>
-              The traffic system.
-            </p>
-
-          </div>
-        </details>
-
-      </article>
-
-    </div>
-  </div>
+<div class="container">
+
+<div class="section-head">
+<div>
+<div class="section-num">03 / PROJECTS</div>
+<h2 class="section-title">Five games. Real contributions.</h2>
+</div>
+</div>
+
+<div class="projects">
+
+<article class="project featured">
+
+<div class="project-visual visual-midnight">
+<span>ROBLOX // VEHICLE SYSTEMS</span>
+<b>MIDNIGHT</b>
+<i>HIGHWAY / NIGHT RUN</i>
+</div>
+
+<div class="project-meta">
+<span>2023 · LIVE</span>
+<span>SMALL TEAM</span>
+</div>
+
+<h3>Midnight Chasers: Highway Racing</h3>
+
+<p>
+Open-world highway driving focused on high-speed traffic weaving,
+racing, vehicle customization, and multiplayer vehicle systems.
+</p>
+
+<div class="role-line">
+<strong>Riley's role</strong>
+<span>Gameplay Programmer / Vehicle Systems Programmer</span>
+</div>
+
+<details>
+<summary>Deep dive</summary>
+
+<p>
+Acceleration, braking, steering, reverse behavior, grip, traction,
+drifting, speed-sensitive steering, vehicle spawning/despawning,
+customization, replication debugging, vehicle-loop optimization,
+traffic interactions, and crash/reset fixes.
+</p>
+
+<p>
+<strong>Learned:</strong>
+Client responsiveness vs. server authority in networked vehicles.
+<strong>Favorite:</strong>
+Tuning handling until high-speed driving felt fast without becoming uncontrollable.
+</p>
+
+</details>
+
+<div class="chips">
+<span class="chip">LUAU</span>
+<span class="chip">ROBLOX PHYSICS</span>
+<span class="chip">REMOTE EVENTS</span>
+<span class="chip">MULTIPLAYER</span>
+<span class="chip">DATASTORE</span>
+</div>
+
+</article>
+
+<article class="project">
+
+<div class="project-visual visual-hotwheels">
+<span>UNREAL ENGINE 4 // ARCADE</span>
+<b>HW</b>
+<i>TRACK / BOOST / RACE</i>
+</div>
+
+<div class="project-meta">
+<span>2021 · RELEASED</span>
+<span>PRO TEAM</span>
+</div>
+
+<h3>Hot Wheels Unleashed</h3>
+
+<p>
+Arcade racing built around miniature cars, elaborate tracks, jumps,
+loops, hazards, customization, track creation, and multiplayer.
+</p>
+
+<div class="role-line">
+<strong>Riley's role</strong>
+<span>Junior Gameplay Programmer / Vehicle Gameplay Programmer</span>
+</div>
+
+<details>
+<summary>Deep dive</summary>
+
+<p>
+Vehicle gameplay behavior, acceleration and braking tuning,
+collision behavior, checkpoint and race-state logic,
+vehicle/track interaction, AI racing assistance, profiling,
+parameter tuning, and internal-test bug fixing.
+</p>
+
+<p>
+<strong>Learned:</strong>
+How to work inside an established production codebase and communicate changes with designers.
+<strong>Favorite:</strong>
+How tiny changes to acceleration or braking could change a jump or corner.
+</p>
+
+</details>
+
+<div class="chips">
+<span class="chip">C++</span>
+<span class="chip">UE4</span>
+<span class="chip">BLUEPRINTS</span>
+<span class="chip">AI</span>
+<span class="chip">COLLISION</span>
+</div>
+
+</article>
+
+<article class="project">
+
+<div class="project-visual visual-monster">
+<span>UNREAL ENGINE 5 // OFF-ROAD</span>
+<b>MJS</b>
+<i>JUMPS / TRUCKS / DIRT</i>
+</div>
+
+<div class="project-meta">
+<span>2024 · RELEASED</span>
+<span>PRO TEAM</span>
+</div>
+
+<h3>Monster Jam Showdown</h3>
+
+<p>
+Arcade off-road racing centered around Monster Jam trucks,
+freestyle events, stunts, destruction, jumps, and varied terrain.
+</p>
+
+<div class="role-line">
+<strong>Riley's role</strong>
+<span>Gameplay Programmer / Vehicle Systems Programmer</span>
+</div>
+
+<details>
+<summary>Deep dive</summary>
+
+<p>
+Vehicle gameplay, acceleration/braking, suspension and landing behavior,
+uneven-terrain reactions, collision debugging, checkpoints,
+crash reset/respawn, AI, data-driven gameplay parameters,
+and QA physics investigations.
+</p>
+
+<p>
+<strong>Learned:</strong>
+Off-road vehicles require different assumptions around suspension,
+center of mass, wheel contact, terrain, and landing forces.
+<strong>Favorite:</strong>
+Making the trucks feel heavy without making them sluggish.
+</p>
+
+</details>
+
+<div class="chips">
+<span class="chip">C++</span>
+<span class="chip">UE5</span>
+<span class="chip">CHAOS PHYSICS</span>
+<span class="chip">AI</span>
+<span class="chip">VEHICLES</span>
+</div>
+
+</article>
+
+<article class="project">
+
+<div class="project-visual visual-rennsport">
+<span>UNREAL ENGINE 5 // SIMULATION</span>
+<b>RS</b>
+<i>GT / TRACTION / ESPORTS</i>
+</div>
+
+<div class="project-meta">
+<span>2025 · RELEASED</span>
+<span>PRO TEAM</span>
+</div>
+
+<h3>RENNSPORT</h3>
+
+<p>
+Competitive racing simulation focused on realistic vehicle behavior,
+licensed cars and circuits, online competition, and esports.
+</p>
+
+<div class="role-line">
+<strong>Riley's role</strong>
+<span>Vehicle Gameplay Programmer</span>
+</div>
+
+<details>
+<summary>Deep dive</summary>
+
+<p>
+Vehicle gameplay, handling parameters, acceleration, braking,
+steering, traction, physics debugging, race-state systems,
+multiplayer synchronization, profiling, and debugging tools.
+</p>
+
+<p>
+<strong>Learned:</strong>
+The difference between making a vehicle fun and making a vehicle convincing.
+<strong>Favorite:</strong>
+Finding the reason a car feels wrong instead of simply changing numbers until it feels better.
+</p>
+
+</details>
+
+<div class="chips">
+<span class="chip">C++</span>
+<span class="chip">UE5</span>
+<span class="chip">CHAOS PHYSICS</span>
+<span class="chip">NETWORKING</span>
+<span class="chip">PROFILING</span>
+</div>
+
+</article>
+
+<article class="project">
+
+<div class="project-visual visual-highway">
+<span>ROBLOX // TRAFFIC SYSTEMS</span>
+<b>HF</b>
+<i>TRAFFIC / HIGHWAY / DATA</i>
+</div>
+
+<div class="project-meta">
+<span>2022–2024 · LIVE</span>
+<span>SMALL TEAM</span>
+</div>
+
+<h3>Highway Frenzy</h3>
+
+<p>
+Roblox highway driving built around traffic, racing,
+vehicle customization, multiple environments, and high-speed multiplayer play.
+</p>
+
+<div class="role-line">
+<strong>Riley's role</strong>
+<span>Gameplay Programmer</span>
+</div>
+
+<details>
+<summary>Deep dive</summary>
+
+<p>
+AI traffic, traffic spawning/despawning, vehicle detection around the player,
+traffic-density optimization, race/checkpoint functionality,
+customization UI, purchase/unlock logic, player data,
+synchronization fixes, and continuous-script optimization.
+</p>
+
+<p>
+<strong>Learned:</strong>
+How much optimization matters when many vehicles are active simultaneously.
+<strong>Favorite:</strong>
+Designing traffic around what actually needs to run, where, and how often.
+</p>
+
+</details>
+
+<div class="chips">
+<span class="chip">LUAU</span>
+<span class="chip">AI TRAFFIC</span>
+<span class="chip">DATASTORE</span>
+<span class="chip">UI</span>
+<span class="chip">NETWORKING</span>
+</div>
+
+</article>
+
+</div>
+</div>
 </section>
 
-<section>
-  <div class="container">
+<section id="toolkit">
+<div class="container">
 
-    <div class="section-head reveal">
-      <div class="eyebrow">DEV LAB</div>
-      <h2>Always debugging something.</h2>
-    </div>
+<div class="section-head">
 
-    <div class="terminal reveal">
+<div>
+<div class="section-num">06 / TECH STACK</div>
+<h2 class="section-title">Tools of the trade.</h2>
+</div>
 
-      <div class="terminal-top">
-        <i></i>
-        <i></i>
-        <i></i>
-        <span class="terminal-name">
-          riley@dev-lab:~/vehicle-systems
-        </span>
-      </div>
+<p class="section-copy">
+The technologies and workflows Riley has used across professional racing,
+simulation, and Roblox development.
+</p>
 
-      <div class="terminal-body">
+</div>
 
-        <div class="terminal-line">
-          <span class="prompt">riley@dev-lab</span>:
-          <span class="command">~$ profile vehicle_system</span>
-        </div>
+<div class="toolkit-grid">
 
-        <div class="terminal-line comment">
-          // checking physics-heavy update loops...
-        </div>
+<article class="toolkit-group panel">
+<div class="eyebrow">PROGRAMMING</div>
 
-        <div class="terminal-line">
-          traction_model ............. OK
-        </div>
+<div class="tool">
+<strong>C++</strong>
+<span>Gameplay · vehicle systems · physics integration · tools</span>
+</div>
 
-        <div class="terminal-line">
-          steering_response .......... OK
-        </div>
+<div class="tool">
+<strong>Luau</strong>
+<span>Roblox gameplay · UI · networking · data systems</span>
+</div>
+</article>
 
-        <div class="terminal-line">
-          suspension_solver .......... OK
-        </div>
+<article class="toolkit-group panel">
+<div class="eyebrow">ENGINES</div>
 
-        <div class="terminal-line">
-          network_sync ............... OK
-        </div>
+<div class="tool">
+<strong>Unreal Engine 4</strong>
+<span>Gameplay programming · Blueprints · debugging</span>
+</div>
 
-        <div class="terminal-line">
-          traffic_density ............ OPTIMIZED
-        </div>
+<div class="tool">
+<strong>Unreal Engine 5</strong>
+<span>Gameplay · Chaos Physics · profiling</span>
+</div>
 
-        <div class="terminal-line comment">
-          // vehicle feels right. ship it.
-        </div>
+<div class="tool">
+<strong>Roblox Studio</strong>
+<span>Gameplay · vehicles · multiplayer · UI</span>
+</div>
+</article>
 
-        <div class="terminal-line">
-          <span class="prompt">riley@dev-lab</span>:
-          <span class="command">~$ _</span>
-        </div>
+<article class="toolkit-group panel">
+<div class="eyebrow">PHYSICS</div>
 
-      </div>
-    </div>
-  </div>
-</section>
+<div class="tool-list">
+<span>Vehicle handling</span>
+<span>Acceleration / braking</span>
+<span>Traction</span>
+<span>Steering</span>
+<span>Suspension</span>
+<span>Collision systems</span>
+<span>Terrain interaction</span>
+<span>Vehicle recovery</span>
+</div>
+</article>
 
-<section>
-  <div class="container">
+<article class="toolkit-group panel">
+<div class="eyebrow">NETWORKING</div>
 
-    <div class="section-head reveal">
-      <div class="eyebrow">CURRENTLY BUILDING</div>
-      <h2>More systems. Better feel.</h2>
-    </div>
+<div class="tool-list">
+<span>Client / server architecture</span>
+<span>Replication</span>
+<span>RemoteEvents / RemoteFunctions</span>
+<span>Vehicle synchronization</span>
+<span>Network debugging</span>
+<span>Server performance</span>
+</div>
+</article>
 
-    <div class="grid grid-3">
+<article class="toolkit-group panel">
+<div class="eyebrow">TOOLS</div>
 
-      <div class="card reveal">
-        <div class="icon">01</div>
-        <h3>Vehicle Physics</h3>
-        <p>
-          Improving handling models, traction behavior,
-          suspension response, and vehicle recovery systems.
-        </p>
-      </div>
+<div class="tool-list">
+<span>Visual Studio</span>
+<span>Unreal Insights</span>
+<span>Git</span>
+<span>Roblox Developer Console</span>
+<span>Perforce workflows</span>
+</div>
+</article>
 
-      <div class="card reveal">
-        <div class="icon">02</div>
-        <h3>Gameplay Architecture</h3>
-        <p>
-          Building modular gameplay systems that are easier
-          to debug, tune, extend, and maintain.
-        </p>
-      </div>
+<article class="toolkit-group panel quote-panel">
+<div class="eyebrow">SPECIALIZATION</div>
 
-      <div class="card reveal">
-        <div class="icon">03</div>
-        <h3>Optimization</h3>
-        <p>
-          Finding expensive systems and making them do less
-          work without sacrificing gameplay quality.
-        </p>
-      </div>
+<strong class="toolkit-big">VEHICLE GAMEPLAY</strong>
 
-    </div>
-  </div>
+<p>
+Technical systems with a direct effect on how a player drives,
+races, and interacts with a game world.
+</p>
+
+</article>
+
+</div>
+</div>
 </section>
 
 <section id="contact">
-  <div class="container">
 
-    <div class="contact-box reveal">
+<div class="container">
 
-      <div class="eyebrow">CONTACT</div>
+<div class="contact">
 
-      <h2>Let's build something that feels good.</h2>
+<div class="contact-box">
 
-      <p>
-        Interested in gameplay programming, vehicle systems,
-        racing mechanics, or technical collaboration?
-        Reach out.
-      </p>
+<div class="eyebrow">05 / CONTACT</div>
 
-      <div class="contact-actions">
+<h2>Let's build something.</h2>
 
-        <a
-          class="btn primary"
-          href="mailto:myuryedev@gmail.com">
-          EMAIL RILEY
-        </a>
+<p>
+Riley is interested in gameplay programming, vehicle systems,
+technical gameplay, and racing projects.
+</p>
 
-        <a
-          class="btn"
-          href="https://www.roblox.com/users/4301183864/profile"
-          target="_blank"
-          rel="noopener noreferrer">
-          ROBLOX PROFILE
-        </a>
+<div class="contact-actions">
 
-      </div>
+<a
+class="btn primary"
+href="https://www.roblox.com/users/4301183864/profile"
+target="_blank"
+rel="noopener">
+Riley on Roblox ↗
+</a>
 
-    </div>
-  </div>
-</section>
+<a
+class="btn"
+href="mailto:myuryedev@gmail.com">
+Email Riley ↗
+</a>
 
-<section>
-  <div class="container">
+</div>
 
-    <div class="section-head reveal">
-      <div class="eyebrow">TEAM EXPERIENCE</div>
-      <h2>Technical work with people behind it.</h2>
-    </div>
+</div>
 
-    <div class="grid grid-3">
+<div class="team-panel panel">
 
-      <div class="card reveal">
-        <h3>Designer Collaboration</h3>
-        <p>
-          Turning gameplay ideas into tunable,
-          reliable systems that designers can iterate on.
-        </p>
-      </div>
+<div>
+<div class="eyebrow">TEAM EXPERIENCE</div>
 
-      <div class="card reveal">
-        <h3>QA & Debugging</h3>
-        <p>
-          Reproducing edge cases, tracking down physics bugs,
-          and identifying which system is actually responsible.
-        </p>
-      </div>
+<h3>Built alongside other disciplines.</h3>
 
-      <div class="card reveal">
-        <h3>Production Code</h3>
-        <p>
-          Working inside larger codebases while keeping
-          gameplay systems maintainable and performant.
-        </p>
-      </div>
+<p>
+Experience collaborating with gameplay programmers,
+vehicle/physics programmers, technical designers, artists,
+level designers, QA, producers, and UI/UX teams.
+</p>
 
-    </div>
-  </div>
+</div>
+
+<div class="team-tags">
+
+<span class="chip">GAMEPLAY</span>
+<span class="chip">VEHICLE / PHYSICS</span>
+<span class="chip">TECH DESIGN</span>
+<span class="chip">ART</span>
+<span class="chip">LEVEL DESIGN</span>
+<span class="chip">QA</span>
+<span class="chip">PRODUCTION</span>
+<span class="chip">UI / UX</span>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </section>
 
 </main>
 
-<footer>
-  <div class="container footer-inner">
-    <span>© 2026 RILEY / DEV</span>
-    <span>GAMEPLAY · VEHICLES · SYSTEMS</span>
-  </div>
+<footer class="container">
+<span>© 2026 Riley</span>
+<span>Built with <span class="purple">code</span> & curiosity.</span>
 </footer>
 
+</div>
+
 <script>
+/* =========================
+   18-SONG RANDOM PLAYLIST
+   ========================= */
+
+const songs = [
+  {
+    title: "Telepatía",
+    file: "audio/telepatia.mp3"
+  },
+  {
+    title: "Breathe",
+    file: "audio/breathe.mp3"
+  },
+  {
+    title: "Нарисую забуду",
+    file: "audio/narisuyu-zabudu.mp3"
+  },
+  {
+    title: "PROBLEMATIC",
+    file: "audio/problematic.mp3"
+  },
+  {
+    title: "whatever you desire",
+    file: "audio/whatever-you-desire.mp3"
+  },
+  {
+    title: "Lies For The Liars",
+    file: "audio/lies-for-the-liars.mp3"
+  },
+  {
+    title: "panzerknacker",
+    file: "audio/panzerknacker.mp3"
+  },
+  {
+    title: "What Can I Do HardTekk",
+    file: "audio/what-can-i-do-hardtekk.mp3"
+  },
+  {
+    title: "Fallen",
+    file: "audio/fallen.mp3"
+  },
+  {
+    title: "I'm Here",
+    file: "audio/im-here.mp3"
+  },
+  {
+    title: "Scream For My Ice Cream",
+    file: "audio/scream-for-my-ice-cream.mp3"
+  },
+  {
+    title: "Night Rider",
+    file: "audio/night-rider.mp3"
+  },
+  {
+    title: "Cheating is a crime",
+    file: "audio/cheating-is-a-crime.mp3"
+  },
+  {
+    title: "Ghetto Flowers",
+    file: "audio/ghetto-flowers.mp3"
+  },
+  {
+    title: "One Call (Guitar Remix)",
+    file: "audio/one-call-guitar-remix.mp3"
+  },
+  {
+    title: "Alone Again",
+    file: "audio/alone-again.mp3"
+  },
+  {
+    title: "Bad Girl Online",
+    file: "audio/bad-girl-online.mp3"
+  },
+  {
+    title: "Tokyo Teddy Bear",
+    file: "audio/tokyo-teddy-bear.mp3"
+  }
+];
+
+const player = document.getElementById("musicPlayer");
+const card = document.getElementById("musicCard");
+const toggle = document.getElementById("musicToggle");
+const progress = document.getElementById("musicProgress");
+const title = document.getElementById("trackTitle");
+const time = document.getElementById("musicTime");
+
+let currentIndex = -1;
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) {
+    return "0:00";
+  }
+
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60)
+    .toString()
+    .padStart(2, "0");
+
+  return mins + ":" + secs;
+}
+
+function pickRandomSong() {
+  if (songs.length === 1) {
+    return 0;
+  }
+
+  let next = currentIndex;
+
+  while (next === currentIndex) {
+    next = Math.floor(Math.random() * songs.length);
+  }
+
+  return next;
+}
+
+function loadRandomSong(autoplay = false) {
+  currentIndex = pickRandomSong();
+
+  const song = songs[currentIndex];
+
+  player.src = song.file;
+  title.textContent = song.title;
+
+  progress.value = 0;
+  time.textContent = "0:00 / 0:00";
+
+  toggle.textContent = "▶";
+  toggle.setAttribute("aria-label", "Play music");
+
+  card.classList.remove("playing");
+
+  if (autoplay) {
+    player.play().catch(() => {});
+  }
+}
+
+/* Play / pause */
+
+toggle.addEventListener("click", () => {
+  if (player.paused) {
+    player.play().catch(() => {});
+  } else {
+    player.pause();
+  }
+});
+
+/* Playing state */
+
+player.addEventListener("play", () => {
+  toggle.textContent = "Ⅱ";
+  toggle.setAttribute("aria-label", "Pause music");
+  card.classList.add("playing");
+});
+
+player.addEventListener("pause", () => {
+  toggle.textContent = "▶";
+  toggle.setAttribute("aria-label", "Play music");
+  card.classList.remove("playing");
+});
+
+/* Metadata */
+
+player.addEventListener("loadedmetadata", () => {
+  progress.value = 0;
+  time.textContent =
+    "0:00 / " + formatTime(player.duration);
+});
+
+/* Progress */
+
+player.addEventListener("timeupdate", () => {
+  if (Number.isFinite(player.duration)) {
+    progress.value =
+      (player.currentTime / player.duration) * 100;
+  }
+
+  time.textContent =
+    formatTime(player.currentTime) +
+    " / " +
+    formatTime(player.duration);
+});
+
+/* Seek */
+
+progress.addEventListener("input", () => {
+  if (Number.isFinite(player.duration)) {
+    player.currentTime =
+      (progress.value / 100) * player.duration;
+  }
+});
+
+/* Automatically choose another random song */
+
+player.addEventListener("ended", () => {
+  loadRandomSong(true);
+});
 
 /* Mobile navigation */
 
-const menuBtn = document.getElementById("menuBtn");
-const navLinks = document.getElementById("navLinks");
+const menuButton = document.querySelector(".menu");
+const navLinks = document.querySelector(".navlinks");
 
-menuBtn.addEventListener("click",()=>{
+menuButton.addEventListener("click", () => {
   navLinks.classList.toggle("open");
 });
 
-document.querySelectorAll(".nav-links a").forEach(link=>{
-  link.addEventListener("click",()=>{
+document.querySelectorAll(".navlinks a").forEach(link => {
+  link.addEventListener("click", () => {
     navLinks.classList.remove("open");
   });
 });
 
-
 /* Scroll progress */
 
-const progress = document.getElementById("progress");
+const scrollProgress =
+  document.querySelector(".scroll-progress");
 
-window.addEventListener("scroll",()=>{
-
+window.addEventListener("scroll", () => {
   const scrollTop = window.scrollY;
-  const height =
+  const scrollHeight =
     document.documentElement.scrollHeight -
-    document.documentElement.clientHeight;
+    window.innerHeight;
 
-  const percentage =
-    height > 0 ? (scrollTop / height) * 100 : 0;
+  const progressAmount =
+    scrollHeight > 0
+      ? scrollTop / scrollHeight
+      : 0;
 
-  progress.style.width = percentage + "%";
-
-},{passive:true});
-
+  scrollProgress.style.transform =
+    `scaleX(${progressAmount})`;
+});
 
 /* Reveal animations */
 
 const revealObserver =
   new IntersectionObserver(
-    entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add("visible");
-          revealObserver.unobserve(entry.target);
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
         }
       });
     },
     {
-      threshold:.12
+      threshold:0.12
     }
   );
 
-document.querySelectorAll(".reveal").forEach(el=>{
-  revealObserver.observe(el);
-});
-
-
-/* Smooth anchor fallback */
-
-document.querySelectorAll('a[href^="#"]').forEach(link=>{
-
-  link.addEventListener("click",event=>{
-
-    const target =
-      document.querySelector(
-        link.getAttribute("href")
-      );
-
-    if(target){
-
-      event.preventDefault();
-
-      target.scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-      });
-
-    }
-
+document
+  .querySelectorAll(".panel,.project,.focus-card,.toolkit-group")
+  .forEach(element => {
+    element.classList.add("reveal");
+    revealObserver.observe(element);
   });
 
-});
+/* Desktop custom cursor */
 
+const cursorDot =
+  document.querySelector(".cursor-dot");
+
+const cursorRing =
+  document.querySelector(".cursor-ring");
+
+const supportsHover =
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+if (supportsHover) {
+
+  document.body.classList.add("has-custom-cursor");
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let ringX = 0;
+  let ringY = 0;
+
+  window.addEventListener("mousemove", event => {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    cursorDot.style.left = mouseX + "px";
+    cursorDot.style.top = mouseY + "px";
+  });
+
+  function animateCursor() {
+
+    ringX += (mouseX - ringX) * 0.16;
+    ringY += (mouseY - ringY) * 0.16;
+
+    cursorRing.style.left = ringX + "px";
+    cursorRing.style.top = ringY + "px";
+
+    requestAnimationFrame(animateCursor);
+  }
+
+  animateCursor();
+
+  document
+    .querySelectorAll("a,button,input,summary,.project,.panel")
+    .forEach(element => {
+
+      element.addEventListener("mouseenter", () => {
+        document.body.classList.add("cursor-active");
+      });
+
+      element.addEventListener("mouseleave", () => {
+        document.body.classList.remove("cursor-active");
+      });
+
+    });
+}
+
+/* Start with a random song loaded, but don't autoplay */
+
+loadRandomSong(false);
 </script>
 
 </body>
